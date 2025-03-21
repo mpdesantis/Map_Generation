@@ -7,7 +7,7 @@
       "cells": {
         "default": {
           "delay": "inertial",
-          "model": "conway",
+          "model": "mapgen",
           "state": { "life": false },
           "neighborhood": [
             { "type": "moore", "range": 1 }

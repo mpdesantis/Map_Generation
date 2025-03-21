@@ -5,16 +5,16 @@
 #include <chrono>
 #include <fstream>
 #include <string>
-#include "include/conwayCell.hpp"
+#include "include/mapgenCell.hpp"
 
 using namespace cadmium::celldevs;
 using namespace cadmium;
 
-std::shared_ptr<GridCell<conwayState, double>> addGridCell(const coordinates & cellId, const std::shared_ptr<const GridCellConfig<conwayState, double>>& cellConfig) {
+std::shared_ptr<GridCell<mapgenState, double>> addGridCell(const coordinates & cellId, const std::shared_ptr<const GridCellConfig<mapgenState, double>>& cellConfig) {
 	auto cellModel = cellConfig->cellModel;
 
-	if (cellModel == "conway") {
-		return std::make_shared<conway>(cellId, cellConfig);
+	if (cellModel == "mapgen") {
+		return std::make_shared<mapgen>(cellId, cellConfig);
 	} else {
 		throw std::bad_typeid();
 	}
@@ -24,7 +24,7 @@ int main(int argc, char ** argv) {
 
     /* Constants and Defaults */
     const std::string DEFAULT_CONFIG_FILE_PATH = "config/mapgen_config.json";
-    constexpr int DEFAULT_SIM_TIME = 500;
+    constexpr int DEFAULT_SIM_TIME = 10;
     const std::string DEFAULT_OUTPUT_FILE_PATH = "output/mapgen_grid_log.csv";
 
     /* Argument Parsing */
@@ -42,7 +42,7 @@ int main(int argc, char ** argv) {
     std::cout << "Output File: " << outputFilePath << std::endl;
 
     /* Models */
-	auto model = std::make_shared<GridCellDEVSCoupled<conwayState, double>>("mapgen", addGridCell, configFilePath);
+	auto model = std::make_shared<GridCellDEVSCoupled<mapgenState, double>>("mapgen", addGridCell, configFilePath);
 	model->buildModel();
 	
     /* Logs */
