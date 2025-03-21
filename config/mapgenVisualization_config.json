@@ -1,6 +1,6 @@
 {
     "scenario": {
-        "shape": [10, 10],
+        "shape": [100, 100],
         "origin": [0, 0],
         "wrapped": false
       },
@@ -22,7 +22,7 @@
       },
     "viewer": [
             {
-              "colors": [[0, 0, 0], [255, 0, 0]],
+              "colors": [[51, 153, 255], [0, 204, 0]],
               "breaks": [0, 0.5, 1],
               "field": "life"
             }

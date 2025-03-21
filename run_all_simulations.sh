@@ -33,12 +33,11 @@ echo -e "EXECUTING $SCRIPT...\n"
 
 # Run all simulations
 SIMULATION_DIR=${PWD}/bin
-echo -e "Executing all simulation binaries in ${SIMULATION_DIR} ...\n"
+echo -e "Executing all simulation binaries (with default arguments) in ${SIMULATION_DIR} ...\n"
 for BINARY in "${SIMULATION_DIR}"/*;
 do
     if [[ -x "${BINARY}" && -f "${BINARY}" ]]; then
         echo -e "Executing simulation binary: bin/$(basename ${BINARY})"
-        echo -e "--> Corresponding output file: output/$(basename ${BINARY}).csv"
         "${BINARY}" 
     else
         echo "Skipping non-executable file: ${BINARY}"
