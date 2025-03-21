@@ -21,21 +21,41 @@ std::shared_ptr<GridCell<conwayState, double>> addGridCell(const coordinates & c
 }
 
 int main(int argc, char ** argv) {
-	if (argc < 2) {
-		std::cout << "Program used with wrong parameters. The program must be invoked as follows:";
-		std::cout << argv[0] << " SCENARIO_CONFIG.json [MAX_SIMULATION_TIME (default: 500)]" << std::endl;
-		return -1;
-	}
-	std::string configFilePath = argv[1];
-	double simTime = (argc > 2)? std::stod(argv[2]) : 500;
+
+    /* Constants and Defaults */
+    const std::string DEFAULT_OUTPUT_FILE_PATH = "./output/map_generation.csv";
+    constexpr int DEFAULT_SIM_TIME = 500;
+    const std::string DEFAULT_CONFIG_FILE_PATH = "./config/map_generation.json";
+
+    /* Argument Parsing */
+//	if (argc < 2) {
+//		std::cout << "Program used with wrong parameters. The program must be invoked as follows:";
+//		std::cout << argv[0] << " SCENARIO_CONFIG.json [MAX_SIMULATION_TIME (default: 500)]" << std::endl;
+//		return -1;
+//	}
+
+    // Set file path
+	//std::string configFilePath = argv[1];
+	std::string configFilePath = (argc > 1) ? argv[1] : DEFAULT_CONFIG_FILE_PATH;
+
+    // Set simulation duration
+	double simTime = (argc > 2) ? std::stod(argv[2]) : DEFAULT_SIM_TIME;
+
+    // Set output path
+	std::string outputFilePath = (argc > 3) ? argv[3] : DEFAULT_OUTPUT_FILE_PATH;
+
+    /* Models */
 
 	auto model = std::make_shared<GridCellDEVSCoupled<conwayState, double>>("conway", addGridCell, configFilePath);
 	model->buildModel();
 	
 	auto rootCoordinator = RootCoordinator(model);
-	rootCoordinator.setLogger<CSVLogger>("grid_log.csv", ";");
+	//rootCoordinator.setLogger<CSVLogger>("conway_log.csv", ";");
+	rootCoordinator.setLogger<CSVLogger>(outputFilePath, ";");
 	
+    // Execute the simulation
 	rootCoordinator.start();
 	rootCoordinator.simulate(simTime);
 	rootCoordinator.stop();
+    return 0;
 }
