@@ -4,28 +4,58 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 
-//! Conway game of life cell state.
-struct mapgenState {
-	bool life;
-
-	//! Default constructor function.
-	mapgenState() : life(false) {}
+/**
+ * Enum for easy state representation.
+ */
+enum MapgenStateName {
+    WATER,  // 0
+    LAND,   // 1
+    FOREST, // 2
+    DESERT  // 3
 };
 
-//! It prints the life of the cell in an output stream.
-std::ostream& operator<<(std::ostream& os, const mapgenState& x) {
-	os << "<" << ((x.life)? 1 : 0) << ">";
-	return os;
+
+/**
+ * Atomic model cell state variables.
+ */
+struct MapgenState {
+    /**
+     * Members
+     */
+    int terrain;
+
+    /**
+     * Constructor
+     */
+	MapgenState() : terrain(MapgenStateName::WATER) {}
+};
+
+/**
+ * operator<< overload definition.
+ *
+ * Defines the output format of the MapgenState enum class in order to
+ * print the cell state.
+ */
+std::ostream& operator<<(std::ostream& os, const MapgenState& s) {
+    os << "<" << s.terrain << ">";
+    return os;
 }
 
-//! The simulator must be able to compare the equality of two state objects
-bool operator!=(const mapgenState& x, const mapgenState& y) {
-	return x.life != y.life;
+/**
+ * operator!= overload definition.
+ *
+ * Enables simulator to check for equality between two state objects.
+ */
+bool operator!=(const MapgenState& x, const MapgenState& y) {
+	return x.terrain != y.terrain;
 }
 
-//! It parses a JSON file and generates the corresponding mapgenState object.
-void from_json(const nlohmann::json& j, mapgenState& s) {
-	j.at("life").get_to(s.life);
+/**
+ * Parse a JSON file to populate a cell's state.
+ */
+void from_json(const nlohmann::json& j, MapgenState& s) {
+    // terrain
+	j.at("terrain").get_to(s.terrain);
 }
 
 #endif // MAPGEN_STATE_HPP

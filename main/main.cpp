@@ -1,16 +1,24 @@
-#include "nlohmann/json.hpp"
-#include <cadmium/modeling/celldevs/grid/coupled.hpp>
-#include <cadmium/simulation/logger/csv.hpp>
-#include <cadmium/simulation/root_coordinator.hpp>
+// Standard
 #include <chrono>
 #include <fstream>
 #include <string>
+
+// Other
+#include "nlohmann/json.hpp"
+
+// Cadmium V2
+#include <cadmium/modeling/celldevs/grid/coupled.hpp>
+#include <cadmium/simulation/logger/csv.hpp>
+#include <cadmium/simulation/root_coordinator.hpp>
+
+// Models
 #include "include/mapgenCell.hpp"
 
 using namespace cadmium::celldevs;
 using namespace cadmium;
 
-std::shared_ptr<GridCell<mapgenState, double>> addGridCell(const coordinates & cellId, const std::shared_ptr<const GridCellConfig<mapgenState, double>>& cellConfig) {
+// Model
+std::shared_ptr<GridCell<MapgenState, double>> addGridCell(const coordinates & cellId, const std::shared_ptr<const GridCellConfig<MapgenState, double>>& cellConfig) {
 	auto cellModel = cellConfig->cellModel;
 
 	if (cellModel == "mapgen") {
@@ -20,6 +28,7 @@ std::shared_ptr<GridCell<mapgenState, double>> addGridCell(const coordinates & c
 	}
 }
 
+// Simulation
 int main(int argc, char ** argv) {
 
     /* Constants and Defaults */
@@ -42,7 +51,7 @@ int main(int argc, char ** argv) {
     std::cout << "Output File: " << outputFilePath << std::endl;
 
     /* Models */
-	auto model = std::make_shared<GridCellDEVSCoupled<mapgenState, double>>("mapgen", addGridCell, configFilePath);
+	auto model = std::make_shared<GridCellDEVSCoupled<MapgenState, double>>("mapgen", addGridCell, configFilePath);
 	model->buildModel();
 	
     /* Logs */

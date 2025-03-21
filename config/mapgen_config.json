@@ -1,6 +1,6 @@
 {
   "scenario": {
-    "shape": [100, 100],
+    "shape": [20, 20],
     "origin": [0, 0],
     "wrapped": false
   },
@@ -8,16 +8,24 @@
     "default": {
       "delay": "inertial",
       "model": "mapgen",
-      "state": { "life": false },
+      "state": { "terrain": 0 },
       "neighborhood": [
         { "type": "moore", "range": 1 }
       ]
     },
-    "alive": {
-      "state": { "life": true },
+    "land": {
+      "state": { "terrain": 1 },
       "cell_map": [ [1, 1], [1, 2], [1, 3],
                     [2, 1]        , [2, 3],
                     [3, 1], [3, 2], [3, 3]]
+    },
+    "forest": {
+      "state": { "terrain": 2 },
+      "cell_map": [ [7, 7], [7, 8] ]
+    },
+    "desert": {
+      "state": { "terrain": 3 },
+      "cell_map": [ [8, 8], [8, 9] ]
     }
   }
 }
