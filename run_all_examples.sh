@@ -1,12 +1,12 @@
 #!/bin/bash
 ###############################################################################
-# run_all_simulations.sh
-# ----------------------
+# run_all_examples.sh
+# -------------------
 # Run all simulation binaries in `./bin`.
 #
 # Usage:
 # ------
-# $ ./run_all_simulations.sh
+# $ ./run_all_examples.sh
 #
 # Positional Arguments:
 #   NA
@@ -36,6 +36,7 @@ SIMULATION_DIR=${PWD}/bin
 echo -e "Executing all simulation binaries (with default arguments) in ${SIMULATION_DIR} ...\n"
 for BINARY in "${SIMULATION_DIR}"/*;
 do
+    # TODO: Bake in binary calls with appropriate arguments.
     if [[ -x "${BINARY}" && -f "${BINARY}" ]]; then
         echo -e "Executing simulation binary: bin/$(basename ${BINARY})"
         "${BINARY}" 

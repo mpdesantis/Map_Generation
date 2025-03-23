@@ -30,7 +30,7 @@ This repository's contents.
     - C++ source and header files for this repository's main code module, `game_map`.
 * `output/`
     - Generated directory containing output logs from model simulation.
-* `run_all_simulations.sh`
+* `run_all_examples.sh`
     - Shell script to run all available simulation binaries in `bin/`. 
 * `sample-output/`
     - Directory containing sample output logs from model simulation. These logs correspond to those excerpted in the project report (`docs/Game_Map.pdf`), and are presented here in full.
@@ -62,9 +62,9 @@ $ . build_sim.sh
 ```
 
 ### Execute
-To execute this project's simulations, issue the following command:
+To execute this project's example simulations, issue the following command:
 ```sh
-$ ./run_all_simulations.sh
+$ ./run_all_examples.sh
 ```
 Upon successful execution, corresponding output for each simulation binary will be found in the `output/` directory.
 
