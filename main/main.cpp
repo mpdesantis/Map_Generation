@@ -27,7 +27,7 @@ void printHelp() {
     std::cout << "\n  --config, -c     FILE   Take configuration from FILE.";
     std::cout << "\n                            Default: config/mapgen_config.json";
     std::cout << "\n  --duration, -d   NUM    Execute simulation for NUM time units.";
-    std::cout << "\n                            Default: 10";
+    std::cout << "\n                            Default: 20";
     std::cout << "\n  --output, -o     FILE   Log CSV output to FILE.";
     std::cout << "\n                            Default: output/mapgen_grid_log.csv";
     std::cout << "\n  --help, -h              Print this menu and exit.";
@@ -50,7 +50,7 @@ int main(int argc, char ** argv) {
 
     /* Constants */
     const std::string DEFAULT_CONFIG_FILE_PATH = "config/mapgen_config.json";
-    constexpr int DEFAULT_SIM_TIME = 10;
+    constexpr int DEFAULT_SIM_TIME = 20;
     const std::string DEFAULT_OUTPUT_FILE_PATH = "output/mapgen_grid_log.csv";
 
     /* Defaults */
