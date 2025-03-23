@@ -33,17 +33,17 @@ class mapgen : public GridCell<MapgenState, double> {
     static constexpr double DEFAULT_DELAY_TIME = 1.00;
 
     // LAND constants
-    static constexpr int LAND_BIRTH_LIMIT = 3;
-    static constexpr int LAND_DEATH_LIMIT = 2;
+    static constexpr int LAND_BIRTH_LIMIT = 6;
+    static constexpr int LAND_DEATH_LIMIT = 4;
 
     // FOREST constants
     static constexpr int FOREST_BIRTH_LIMIT = 5;
-    static constexpr int FOREST_DEATH_LIMIT = 2;
+    static constexpr int FOREST_DEATH_LIMIT = 3;
 
     // DESERT constants
-    static constexpr int DESERT_BIRTH_LIMIT = 8;
+    static constexpr int DESERT_BIRTH_LIMIT = 7;
     static constexpr int DESERT_DEATH_LIMIT = 4;
-    static constexpr double DESERT_BASE_RATE = 0.3;
+    static constexpr double DESERT_BASE_RATE = 0.2;
     static constexpr double DESERT_MULTIPLIER = 2.0;
 
 
@@ -107,7 +107,7 @@ class mapgen : public GridCell<MapgenState, double> {
             non_water_neighbors = land_neighbors + forest_neighbors + desert_neighbors;
 
             // Case: WATER --> LAND
-            if(non_water_neighbors < LAND_BIRTH_LIMIT) {
+            if(non_water_neighbors > LAND_BIRTH_LIMIT) {
                 // A LAND cell is born
                 state.terrain = MapgenStateName::LAND; 
             }
@@ -127,32 +127,32 @@ class mapgen : public GridCell<MapgenState, double> {
             }
 
             // Case: LAND --> FOREST
-            else if(non_water_neighbors < FOREST_BIRTH_LIMIT) {
-                // A FOREST cell is born
-                state.terrain = MapgenStateName::FOREST;
-            }
+            //else if(non_water_neighbors < FOREST_BIRTH_LIMIT) {
+            //    // A FOREST cell is born
+            //    state.terrain = MapgenStateName::FOREST;
+            //}
 
-            // Case: LAND --> DESERT | LAND
-            else {
-                // Get random number in [0, 1] to test against DESERT rules
-                double r = randomProbability();
-                // Get base threshold for becoming DESERT
-                double desert_threshold = DESERT_BASE_RATE;
-                // Apply multiplier to increase chance of becoming DESERT
-                // if near WATER.
-                if (water_neighbors) {
-                    desert_threshold *= DESERT_MULTIPLIER;
-                }
-                // Case: This cell is below threshold, so it becomes DESERT
-                if (r <= desert_threshold) {
-                    // A DESERT cell is born
-                    state.terrain = MapgenStateName::DESERT;
-                }
-                // Case: This cell exceeds threshold, so it remains LAND
-                else {
-                    // Cell remains as LAND
-                }
-            }
+            //// Case: LAND --> DESERT | LAND
+            //else {
+            //    // Get random number in [0, 1] to test against DESERT rules
+            //    double r = randomProbability();
+            //    // Get base threshold for becoming DESERT
+            //    double desert_threshold = DESERT_BASE_RATE;
+            //    // Apply multiplier to increase chance of becoming DESERT
+            //    // if near WATER.
+            //    if (water_neighbors) {
+            //        desert_threshold *= DESERT_MULTIPLIER;
+            //    }
+            //    // Case: This cell is below threshold, so it becomes DESERT
+            //    if (r <= desert_threshold) {
+            //        // A DESERT cell is born
+            //        state.terrain = MapgenStateName::DESERT;
+            //    }
+            //    // Case: This cell exceeds threshold, so it remains LAND
+            //    else {
+            //        // Cell remains as LAND
+            //    }
+            //}
 
             // Case: LAND --> LAND
             //else {
