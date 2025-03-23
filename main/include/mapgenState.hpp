@@ -35,6 +35,10 @@ struct MapgenState {
  *
  * Defines the output format of the MapgenState enum class in order to
  * print the cell state.
+ *  <0> : WATER
+ *  <1> : LAND
+ *  <2> : FOREST
+ *  <3> : DESERT
  */
 std::ostream& operator<<(std::ostream& os, const MapgenState& s) {
     os << "<" << s.terrain << ">";

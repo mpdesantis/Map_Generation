@@ -28,7 +28,6 @@ class mapgen : public GridCell<MapgenState, double> {
      * Constants
      */
     static constexpr double DEFAULT_DELAY_TIME = 1.00;
-    // TODO: static counter for round tracking in multi-level aggregation
 
     /**
      * Constructor
@@ -45,45 +44,82 @@ class mapgen : public GridCell<MapgenState, double> {
 
         /* Local Variables */
 
-        // TODO: Accumulators for all neighbour types (ie. terrain)
-        // Number of LAND neighbours
-        int live_neighbors = 0;
+        // Accumulators for all neighbor types (differentiated by terrain)
+        int water_neighbors = 0;
+        int land_neighbors = 0;
+        int forest_neighbors = 0;
+        int desert_neighbors = 0;
 
-        /* Canvas the Neighbourhood */
+        /* Canvas the Neighborhood */
 
-        // Assess this cell's neighbourhood
-        // ie. tally neighbour cells by terrain type
+        // Canvas this cell's neighborhood to categorize neighbor types
+        // ie. tally neighbor cells by terrain type
         for (const auto& [neighborId, neighborData]: neighborhood) {
+            // State of the neighbor cell for this iteration
             auto nState = neighborData.state;
 
-            // Count LAND neighbours
-            if(nState->terrain == MapgenStateName::LAND) {
-                live_neighbors++;
+            // WATER neighbors
+            if(nState->terrain == MapgenStateName::WATER) {
+                water_neighbors++;
             }
-            // TODO: Count other neighbours
-
+            // LAND neighbors
+            if(nState->terrain == MapgenStateName::LAND) {
+                land_neighbors++;
+            }
+            // FOREST neighbors
+            if(nState->terrain == MapgenStateName::FOREST) {
+                forest_neighbors++;
+            }
+            // DESERT neighbors
+            if(nState->terrain == MapgenStateName::DESERT) {
+                desert_neighbors++;
+            }
         }
 
         /* Mutate State Based on Rules and Return */
 
-        // Case: This cell is LAND
-        //if(state.life == true) {
-        if(state.terrain == MapgenStateName::LAND) {
-            // Uncount this cell as a neighbour
-            live_neighbors--; 
-            // Case: Change from LAND to WATER
-            if(live_neighbors < 2 || live_neighbors > 3) {
-                //state.life = false;
-                state.terrain = MapgenStateName::WATER;
-            }
-        } 
-        // Case: This cell is WATER
-        else {
-            // Case: Change from WATER to LAND
-            if(live_neighbors == 3) {
-                //state.life = true;
+        // Case: WATER cell
+        if(state.terrain == MapgenStateName::WATER) {
+            // Uncount this cell from its own neighborhood tally
+            water_neighbors--; 
+
+            // Case: WATER --> LAND
+            if(land_neighbors == 3) {
                 state.terrain = MapgenStateName::LAND;
             }
+        } 
+
+        // Case: LAND cell
+        else if (state.terrain == MapgenStateName::LAND) {
+            // Uncount this cell from its own neighborhood tally
+            land_neighbors--; 
+
+            // Case: LAND --> WATER
+            if(land_neighbors < 2 || land_neighbors > 3) {
+                state.terrain = MapgenStateName::WATER;
+            }
+        }
+
+        // Case: FOREST cell
+        else if (state.terrain == MapgenStateName::FOREST) {
+            // Uncount this cell from its own neighborhood tally
+            forest_neighbors--; 
+
+            // Case: FOREST --> WATER
+            //if(condition) {
+            //    state.terrain = MapgenStateName::NEW_STATE;
+            //}
+        }
+
+        // Case: DESERT cell
+        else if (state.terrain == MapgenStateName::DESERT) {
+            // Uncount this cell from its own neighborhood tally
+            desert_neighbors--; 
+
+            // Case: DESERT --> WATER
+            //if(condition) {
+            //    state.terrain = MapgenStateName::NEW_STATE;
+            //}
         }
 
         return state;
