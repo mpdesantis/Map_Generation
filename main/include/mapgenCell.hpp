@@ -33,15 +33,15 @@ class mapgen : public GridCell<MapgenState, double> {
     static constexpr double DEFAULT_DELAY_TIME = 1.00;
 
     // LAND constants
-    static constexpr int LAND_BIRTH_LIMIT = 4;
-    static constexpr int LAND_DEATH_LIMIT = 3;
+    static constexpr int LAND_BIRTH_LIMIT = 3;
+    static constexpr int LAND_DEATH_LIMIT = 2;
 
     // FOREST constants
-    static constexpr int FOREST_BIRTH_LIMIT = 2;
-    static constexpr int FOREST_DEATH_LIMIT = 3;
+    static constexpr int FOREST_BIRTH_LIMIT = 5;
+    static constexpr int FOREST_DEATH_LIMIT = 2;
 
     // DESERT constants
-    static constexpr int DESERT_BIRTH_LIMIT = 3;
+    static constexpr int DESERT_BIRTH_LIMIT = 8;
     static constexpr int DESERT_DEATH_LIMIT = 4;
     static constexpr double DESERT_BASE_RATE = 0.3;
     static constexpr double DESERT_MULTIPLIER = 2.0;
@@ -132,9 +132,8 @@ class mapgen : public GridCell<MapgenState, double> {
                 state.terrain = MapgenStateName::FOREST;
             }
 
-            // Case: LAND --> DESERT
-            // TODO: supplement rules
-            else if(non_water_neighbors < DESERT_BIRTH_LIMIT) {
+            // Case: LAND --> DESERT | LAND
+            else {
                 // Get random number in [0, 1] to test against DESERT rules
                 double r = randomProbability();
                 // Get base threshold for becoming DESERT
@@ -156,9 +155,9 @@ class mapgen : public GridCell<MapgenState, double> {
             }
 
             // Case: LAND --> LAND
-            else {
-                // Cell remains as LAND
-            }
+            //else {
+            //    // Cell remains as LAND
+            //}
         }
 
         // Case: FOREST cell
