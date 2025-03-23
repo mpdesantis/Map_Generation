@@ -23,7 +23,7 @@
       "state": { "terrain": 2 },
       "cell_map": [ [7, 7], [7, 8] ]
     },
-    "desert": {
+    "sand": {
       "state": { "terrain": 3 },
       "cell_map": [ [8, 8], [8, 9] ]
     }

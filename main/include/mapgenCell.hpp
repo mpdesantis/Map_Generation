@@ -53,7 +53,7 @@ class mapgen : public GridCell<MapgenState, double> {
         int water_neighbors = 0;
         int land_neighbors = 0;
         int forest_neighbors = 0;
-        int desert_neighbors = 0;
+        int sand_neighbors = 0;
         int non_water_neighbors = 0;
 
         /* Canvas the Neighborhood */
@@ -76,9 +76,9 @@ class mapgen : public GridCell<MapgenState, double> {
             if(nState->terrain == MapgenStateName::FOREST) {
                 forest_neighbors++;
             }
-            // DESERT neighbors
-            if(nState->terrain == MapgenStateName::DESERT) {
-                desert_neighbors++;
+            // SAND neighbors
+            if(nState->terrain == MapgenStateName::SAND) {
+                sand_neighbors++;
             }
         }
 
@@ -89,7 +89,7 @@ class mapgen : public GridCell<MapgenState, double> {
             // Uncount this cell from its own neighborhood tally
             water_neighbors--; 
             // Tally the alive (ie. non-WATER neighbors) for rule use
-            non_water_neighbors = land_neighbors + forest_neighbors + desert_neighbors;
+            non_water_neighbors = land_neighbors + forest_neighbors + sand_neighbors;
 
             // Case: WATER --> LAND
             if(non_water_neighbors > state.land_birth_limit) {
@@ -103,7 +103,7 @@ class mapgen : public GridCell<MapgenState, double> {
             // Uncount this cell from its own neighborhood tally
             land_neighbors--; 
             // Tally the alive (ie. non-WATER neighbors) for rule use
-            non_water_neighbors = land_neighbors + forest_neighbors + desert_neighbors;
+            non_water_neighbors = land_neighbors + forest_neighbors + sand_neighbors;
 
             // Case: LAND --> WATER
             if(non_water_neighbors < state.land_death_limit) {
@@ -111,21 +111,21 @@ class mapgen : public GridCell<MapgenState, double> {
                 state.terrain = MapgenStateName::WATER;
             }
 
-            // Case: LAND --> DESERT | LAND
-            // DESERT can only form near WATER (ie. at least one WATER neighbor)
+            // Case: LAND --> SAND | LAND
+            // SAND can only form near WATER (ie. at least one WATER neighbor)
             else if (water_neighbors) {
-                // Get random number in [0, 1] to test against DESERT rules
+                // Get random number in [0, 1] to test against SAND rules
                 double r = randomProbability();
-                // Get base threshold for becoming DESERT
-                double desert_threshold = state.desert_base_rate;
-                // DESERT is more likely to form near WATER.
-                // Apply multiplier to increase chance of becoming DESERT
+                // Get base threshold for becoming SAND
+                double sand_threshold = state.sand_base_rate;
+                // SAND is more likely to form near WATER.
+                // Apply multiplier to increase chance of becoming SAND
                 // based on number of WATER neighbours
-                desert_threshold += state.desert_multiplier * water_neighbors;
-                // Case: This cell is below threshold, so it becomes DESERT
-                if (r <= desert_threshold) {
-                    // A DESERT cell is born
-                    state.terrain = MapgenStateName::DESERT;
+                sand_threshold += state.sand_multiplier * water_neighbors;
+                // Case: This cell is below threshold, so it becomes SAND
+                if (r <= sand_threshold) {
+                    // A SAND cell is born
+                    state.terrain = MapgenStateName::SAND;
                 }
                 // Case: This cell remains LAND
             }
@@ -135,13 +135,13 @@ class mapgen : public GridCell<MapgenState, double> {
             else {
                 // Get random number in [0, 1] to test against FOREST rules
                 double r = randomProbability();
-                // Get base threshold for becoming DESERT
+                // Get base threshold for becoming SAND
                 double forest_threshold = state.forest_base_rate;
                 // FOREST is more likely to form near FOREST.
                 // Apply multiplier to increase chance of becoming FOREST
                 // based on number of FOREST neighbors.
                 forest_threshold += state.forest_multiplier * forest_neighbors;
-                // Case: This cell is below threshold, so it becomes DESERT
+                // Case: This cell is below threshold, so it becomes SAND
                 if (r <= forest_threshold) {
                     // A FOREST cell is born
                     state.terrain = MapgenStateName::FOREST;
@@ -157,7 +157,7 @@ class mapgen : public GridCell<MapgenState, double> {
             // Uncount this cell from its own neighborhood tally
             forest_neighbors--; 
             // Tally the alive (ie. non-WATER neighbors) for rule use
-            non_water_neighbors = land_neighbors + forest_neighbors + desert_neighbors;
+            non_water_neighbors = land_neighbors + forest_neighbors + sand_neighbors;
 
             // Case: FOREST --> LAND
             // If too much WATER nearby, revert to LAND
@@ -167,18 +167,18 @@ class mapgen : public GridCell<MapgenState, double> {
             }
         }
 
-        // Case: DESERT cell
-        // DESERT can only revert to LAND
-        else if (state.terrain == MapgenStateName::DESERT) {
+        // Case: SAND cell
+        // SAND can only revert to LAND
+        else if (state.terrain == MapgenStateName::SAND) {
             // Uncount this cell from its own neighborhood tally
-            desert_neighbors--; 
+            sand_neighbors--; 
             // Tally the alive (ie. non-WATER neighbors) for rule use
-            non_water_neighbors = land_neighbors + forest_neighbors + desert_neighbors;
+            non_water_neighbors = land_neighbors + forest_neighbors + sand_neighbors;
 
-            // Case: DESERT --> LAND
+            // Case: SAND --> LAND
             // If not enough WATER nearby, revert to LAND
-            if(water_neighbors < state.desert_death_limit) {
-                // A DESERT cell reverts to LAND
+            if(water_neighbors < state.sand_death_limit) {
+                // A SAND cell reverts to LAND
                 state.terrain = MapgenStateName::LAND;
             }
         }

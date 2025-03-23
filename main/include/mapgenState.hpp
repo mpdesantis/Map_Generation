@@ -11,7 +11,7 @@ enum MapgenStateName {
     WATER,  // 0
     LAND,   // 1
     FOREST, // 2
-    DESERT  // 3
+    SAND  // 3
 };
 
 
@@ -26,11 +26,11 @@ struct MapgenState {
     int land_birth_limit;
     int land_death_limit;
     int forest_death_limit;
-    int desert_death_limit;
+    int sand_death_limit;
     double forest_base_rate;
     double forest_multiplier;
-    double desert_base_rate;
-    double desert_multiplier;
+    double sand_base_rate;
+    double sand_multiplier;
 
     /**
      * Constructor
@@ -39,11 +39,11 @@ struct MapgenState {
         , land_birth_limit(6)
         , land_death_limit(4)
         , forest_death_limit(3)
-        , desert_death_limit(2)
+        , sand_death_limit(2)
         , forest_base_rate(0.10)
         , forest_multiplier(0.12)
-        , desert_base_rate(0.15)
-        , desert_multiplier(0.05)
+        , sand_base_rate(0.15)
+        , sand_multiplier(0.05)
     {}
 };
 
@@ -55,7 +55,7 @@ struct MapgenState {
  *  <0> : WATER
  *  <1> : LAND
  *  <2> : FOREST
- *  <3> : DESERT
+ *  <3> : SAND
  */
 std::ostream& operator<<(std::ostream& os, const MapgenState& s) {
     os << "<" << s.terrain << ">";
@@ -80,11 +80,11 @@ void from_json(const nlohmann::json& j, MapgenState& s) {
 	j.at("land_birth_limit").get_to(s.land_birth_limit);
 	j.at("land_death_limit").get_to(s.land_death_limit);
 	j.at("forest_death_limit").get_to(s.forest_death_limit);
-	j.at("desert_death_limit").get_to(s.desert_death_limit);
+	j.at("sand_death_limit").get_to(s.sand_death_limit);
 	j.at("forest_base_rate").get_to(s.forest_base_rate);
 	j.at("forest_multiplier").get_to(s.forest_multiplier);
-	j.at("desert_base_rate").get_to(s.desert_base_rate);
-	j.at("desert_multiplier").get_to(s.desert_multiplier);
+	j.at("sand_base_rate").get_to(s.sand_base_rate);
+	j.at("sand_multiplier").get_to(s.sand_multiplier);
 }
 
 #endif // MAPGEN_STATE_HPP
