@@ -45,8 +45,8 @@ class mapgen : public GridCell<MapgenState, double> {
     // DESERT constants
     static constexpr int DESERT_BIRTH_LIMIT = 7;
     static constexpr int DESERT_DEATH_LIMIT = 4;
-    static constexpr double DESERT_BASE_RATE = 0.2;
-    static constexpr double DESERT_MULTIPLIER = 2.0;
+    static constexpr double DESERT_BASE_RATE = 0.20;
+    static constexpr double DESERT_MULTIPLIER = 0.08;
 
 
     public:
@@ -128,9 +128,27 @@ class mapgen : public GridCell<MapgenState, double> {
                 state.terrain = MapgenStateName::WATER;
             }
 
+            // Case: LAND --> DESERT | LAND
+            // DESERT can only form near WATER
+            else if (water_neighbors) {
+                // Get random number in [0, 1] to test against DESERT rules
+                double r = randomProbability();
+                // Get base threshold for becoming DESERT
+                double desert_threshold = DESERT_BASE_RATE;
+                // Apply multiplier to increase chance of becoming DESERT
+                // if near WATER.
+                desert_threshold += DESERT_MULTIPLIER * water_neighbors;
+                // Case: This cell is below threshold, so it becomes DESERT
+                if (r <= desert_threshold) {
+                    // A DESERT cell is born
+                    state.terrain = MapgenStateName::DESERT;
+                }
+                // Case: This cell exceeds threshold, so it remains LAND
+            }
+
             // Case: LAND --> FOREST
-            // Forests only grow in interior (no water neighbours)
-            else if(water_neighbors == 0) {
+            // Forests only grow in interior (no water neighbors)
+            else {
 
                 // Get random number in [0, 1] to test against FOREST rules
                 double r = randomProbability();
@@ -144,38 +162,13 @@ class mapgen : public GridCell<MapgenState, double> {
                     // A FOREST cell is born
                     state.terrain = MapgenStateName::FOREST;
                 }
-                // Otherwise, remain as LAND
+                // Case: This cell exceeds threshold, so it remains LAND
             }
 
-            //// Case: LAND --> DESERT | LAND
-            //else {
-            //    // Get random number in [0, 1] to test against DESERT rules
-            //    double r = randomProbability();
-            //    // Get base threshold for becoming DESERT
-            //    double desert_threshold = DESERT_BASE_RATE;
-            //    // Apply multiplier to increase chance of becoming DESERT
-            //    // if near WATER.
-            //    if (water_neighbors) {
-            //        desert_threshold *= DESERT_MULTIPLIER;
-            //    }
-            //    // Case: This cell is below threshold, so it becomes DESERT
-            //    if (r <= desert_threshold) {
-            //        // A DESERT cell is born
-            //        state.terrain = MapgenStateName::DESERT;
-            //    }
-            //    // Case: This cell exceeds threshold, so it remains LAND
-            //    else {
-            //        // Cell remains as LAND
-            //    }
-            //}
-
-            // Case: LAND --> LAND
-            //else {
-            //    // Cell remains as LAND
-            //}
         }
 
         // Case: FOREST cell
+        // FOREST can only revert to LAND
         else if (state.terrain == MapgenStateName::FOREST) {
             // Uncount this cell from its own neighborhood tally
             forest_neighbors--; 
@@ -187,14 +180,10 @@ class mapgen : public GridCell<MapgenState, double> {
                 // A FOREST cell reverts to LAND
                 state.terrain = MapgenStateName::LAND;
             }
-
-            // Case: FOREST --> FOREST
-            else {
-                // Cell remains as FOREST
-            }
         }
 
         // Case: DESERT cell
+        // DESERT can only revert to LAND
         else if (state.terrain == MapgenStateName::DESERT) {
             // Uncount this cell from its own neighborhood tally
             desert_neighbors--; 
@@ -206,13 +195,9 @@ class mapgen : public GridCell<MapgenState, double> {
                 // A DESERT cell reverts to LAND
                 state.terrain = MapgenStateName::LAND;
             }
-
-            // Case: DESERT --> DESERT
-            else {
-                // Cell remains as DESERT
-            }
-            
         }
+
+        // Case: LAND --> LAND
 
         return state;
     }
