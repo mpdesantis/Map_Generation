@@ -8,7 +8,17 @@
     "default": {
       "delay": "inertial",
       "model": "mapgen",
-      "state": { "terrain": 0 },
+      "state": { 
+        "terrain": 0,
+        "land_birth_limit": 6,
+        "land_death_limit": 4,
+        "forest_death_limit": 3,
+        "desert_death_limit": 3,
+        "forest_base_rate": 0.10,
+        "forest_multiplier": 0.12,
+        "desert_base_rate": 0.15,
+        "desert_multiplier": 0.05
+      },
       "neighborhood": [
         { "type": "moore", "range": 1 }
       ]

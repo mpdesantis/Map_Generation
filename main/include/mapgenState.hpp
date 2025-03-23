@@ -23,11 +23,28 @@ struct MapgenState {
      * Members
      */
     int terrain;
+    int land_birth_limit;
+    int land_death_limit;
+    int forest_death_limit;
+    int desert_death_limit;
+    double forest_base_rate;
+    double forest_multiplier;
+    double desert_base_rate;
+    double desert_multiplier;
 
     /**
      * Constructor
      */
-	MapgenState() : terrain(MapgenStateName::WATER) {}
+	MapgenState() : terrain(MapgenStateName::WATER)
+        , land_birth_limit(6)
+        , land_death_limit(4)
+        , forest_death_limit(3)
+        , desert_death_limit(2)
+        , forest_base_rate(0.10)
+        , forest_multiplier(0.12)
+        , desert_base_rate(0.15)
+        , desert_multiplier(0.05)
+    {}
 };
 
 /**
@@ -60,6 +77,14 @@ bool operator!=(const MapgenState& x, const MapgenState& y) {
 void from_json(const nlohmann::json& j, MapgenState& s) {
     // terrain
 	j.at("terrain").get_to(s.terrain);
+	j.at("land_birth_limit").get_to(s.land_birth_limit);
+	j.at("land_death_limit").get_to(s.land_death_limit);
+	j.at("forest_death_limit").get_to(s.forest_death_limit);
+	j.at("desert_death_limit").get_to(s.desert_death_limit);
+	j.at("forest_base_rate").get_to(s.forest_base_rate);
+	j.at("forest_multiplier").get_to(s.forest_multiplier);
+	j.at("desert_base_rate").get_to(s.desert_base_rate);
+	j.at("desert_multiplier").get_to(s.desert_multiplier);
 }
 
 #endif // MAPGEN_STATE_HPP
