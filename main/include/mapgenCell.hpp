@@ -3,6 +3,7 @@
 
 // Standard
 #include <cmath>
+#include <random>
 
 // Other
 #include <nlohmann/json.hpp>
@@ -22,12 +23,31 @@ using namespace cadmium::celldevs;
  */
 class mapgen : public GridCell<MapgenState, double> {
 
-    public:
+    private:
 
     /**
      * Constants
      */
+
+    // Delay time units
     static constexpr double DEFAULT_DELAY_TIME = 1.00;
+
+    // LAND constants
+    static constexpr int LAND_BIRTH_LIMIT = 4;
+    static constexpr int LAND_DEATH_LIMIT = 3;
+
+    // FOREST constants
+    static constexpr int FOREST_BIRTH_LIMIT = 2;
+    static constexpr int FOREST_DEATH_LIMIT = 3;
+
+    // DESERT constants
+    static constexpr int DESERT_BIRTH_LIMIT = 3;
+    static constexpr int DESERT_DEATH_LIMIT = 4;
+    static constexpr double DESERT_BASE_RATE = 0.3;
+    static constexpr double DESERT_MULTIPLIER = 2.0;
+
+
+    public:
 
     /**
      * Constructor
@@ -49,6 +69,7 @@ class mapgen : public GridCell<MapgenState, double> {
         int land_neighbors = 0;
         int forest_neighbors = 0;
         int desert_neighbors = 0;
+        int non_water_neighbors = 0;
 
         /* Canvas the Neighborhood */
 
@@ -82,10 +103,13 @@ class mapgen : public GridCell<MapgenState, double> {
         if(state.terrain == MapgenStateName::WATER) {
             // Uncount this cell from its own neighborhood tally
             water_neighbors--; 
+            // Tally the alive (ie. non-WATER neighbors) for rule use
+            non_water_neighbors = land_neighbors + forest_neighbors + desert_neighbors;
 
             // Case: WATER --> LAND
-            if(land_neighbors == 3) {
-                state.terrain = MapgenStateName::LAND;
+            if(non_water_neighbors < LAND_BIRTH_LIMIT) {
+                // A LAND cell is born
+                state.terrain = MapgenStateName::LAND; 
             }
         } 
 
@@ -93,10 +117,47 @@ class mapgen : public GridCell<MapgenState, double> {
         else if (state.terrain == MapgenStateName::LAND) {
             // Uncount this cell from its own neighborhood tally
             land_neighbors--; 
+            // Tally the alive (ie. non-WATER neighbors) for rule use
+            non_water_neighbors = land_neighbors + forest_neighbors + desert_neighbors;
 
             // Case: LAND --> WATER
-            if(land_neighbors < 2 || land_neighbors > 3) {
+            if(non_water_neighbors < LAND_DEATH_LIMIT) {
+                // A LAND cell dies
                 state.terrain = MapgenStateName::WATER;
+            }
+
+            // Case: LAND --> FOREST
+            else if(non_water_neighbors < FOREST_BIRTH_LIMIT) {
+                // A FOREST cell is born
+                state.terrain = MapgenStateName::FOREST;
+            }
+
+            // Case: LAND --> DESERT
+            // TODO: supplement rules
+            else if(non_water_neighbors < DESERT_BIRTH_LIMIT) {
+                // Get random number in [0, 1] to test against DESERT rules
+                double r = randomProbability();
+                // Get base threshold for becoming DESERT
+                double desert_threshold = DESERT_BASE_RATE;
+                // Apply multiplier to increase chance of becoming DESERT
+                // if near WATER.
+                if (water_neighbors) {
+                    desert_threshold *= DESERT_MULTIPLIER;
+                }
+                // Case: This cell is below threshold, so it becomes DESERT
+                if (r <= desert_threshold) {
+                    // A DESERT cell is born
+                    state.terrain = MapgenStateName::DESERT;
+                }
+                // Case: This cell exceeds threshold, so it remains LAND
+                else {
+                    // Cell remains as LAND
+                }
+            }
+
+            // Case: LAND --> LAND
+            else {
+                // Cell remains as LAND
             }
         }
 
@@ -104,22 +165,39 @@ class mapgen : public GridCell<MapgenState, double> {
         else if (state.terrain == MapgenStateName::FOREST) {
             // Uncount this cell from its own neighborhood tally
             forest_neighbors--; 
+            // Tally the alive (ie. non-WATER neighbors) for rule use
+            non_water_neighbors = land_neighbors + forest_neighbors + desert_neighbors;
 
-            // Case: FOREST --> WATER
-            //if(condition) {
-            //    state.terrain = MapgenStateName::NEW_STATE;
-            //}
+            // Case: FOREST --> LAND
+            if(non_water_neighbors < FOREST_DEATH_LIMIT) {
+                // A FOREST cell reverts to LAND
+                state.terrain = MapgenStateName::LAND;
+            }
+
+            // Case: FOREST --> FOREST
+            else {
+                // Cell remains as FOREST
+            }
         }
 
         // Case: DESERT cell
         else if (state.terrain == MapgenStateName::DESERT) {
             // Uncount this cell from its own neighborhood tally
             desert_neighbors--; 
+            // Tally the alive (ie. non-WATER neighbors) for rule use
+            non_water_neighbors = land_neighbors + forest_neighbors + desert_neighbors;
 
-            // Case: DESERT --> WATER
-            //if(condition) {
-            //    state.terrain = MapgenStateName::NEW_STATE;
-            //}
+            // Case: DESERT --> LAND
+            if(non_water_neighbors < DESERT_DEATH_LIMIT) {
+                // A DESERT cell reverts to LAND
+                state.terrain = MapgenStateName::LAND;
+            }
+
+            // Case: DESERT --> DESERT
+            else {
+                // Cell remains as DESERT
+            }
+            
         }
 
         return state;
@@ -130,6 +208,16 @@ class mapgen : public GridCell<MapgenState, double> {
      */
     [[nodiscard]] double outputDelay(const MapgenState& state) const override {
         return DEFAULT_DELAY_TIME;
+    }
+
+    /**
+     * Get a random double within defined limits
+     */
+    double randomProbability() const {     
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_real_distribution<> dis(0.0, 1.0);
+        return dis(gen);
     }
 };
 
