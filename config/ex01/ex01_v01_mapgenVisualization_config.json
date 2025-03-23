@@ -15,7 +15,7 @@
             "forest_death_limit": 3,
             "sand_death_limit": 3,
             "forest_base_rate": 0.10,
-            "forest_multiplier": 0.12,
+            "forest_multiplier": 0.05,
             "sand_base_rate": 0.15,
             "sand_multiplier": 0.05
           },
