@@ -39,6 +39,8 @@ class mapgen : public GridCell<MapgenState, double> {
     // FOREST constants
     static constexpr int FOREST_BIRTH_LIMIT = 5;
     static constexpr int FOREST_DEATH_LIMIT = 3;
+    static constexpr double FOREST_BASE_RATE = 0.10;
+    static constexpr double FOREST_MULTIPLIER = 0.10;
 
     // DESERT constants
     static constexpr int DESERT_BIRTH_LIMIT = 7;
@@ -127,10 +129,23 @@ class mapgen : public GridCell<MapgenState, double> {
             }
 
             // Case: LAND --> FOREST
-            //else if(non_water_neighbors < FOREST_BIRTH_LIMIT) {
-            //    // A FOREST cell is born
-            //    state.terrain = MapgenStateName::FOREST;
-            //}
+            // Forests only grow in interior (no water neighbours)
+            else if(water_neighbors == 0) {
+
+                // Get random number in [0, 1] to test against FOREST rules
+                double r = randomProbability();
+                // Get base threshold for becoming DESERT
+                double forest_threshold = FOREST_BASE_RATE;
+                // Apply multiplier to increase chance of becoming FOREST
+                // based on number of FOREST neighbors.
+                forest_threshold += FOREST_MULTIPLIER * forest_neighbors;
+                // Case: This cell is below threshold, so it becomes DESERT
+                if (r <= forest_threshold) {
+                    // A FOREST cell is born
+                    state.terrain = MapgenStateName::FOREST;
+                }
+                // Otherwise, remain as LAND
+            }
 
             //// Case: LAND --> DESERT | LAND
             //else {
