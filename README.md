@@ -21,7 +21,8 @@ This repository's contents.
     - CMake build instructions for this repository.
 * `doc/`
     - Directory containing documentation for this repository.
-        1. Report: `Game_Map.pdf`
+        1. Report: `Map_Generation.pdf`
+        2. Model Source Article: `wu-map-gen-from-ca.pdf`
 * `env.sh`
     - Shell script defining additional environment variables for this repository.
 * `img/`
@@ -31,7 +32,7 @@ This repository's contents.
 * `output/`
     - Generated directory containing output logs from model simulation.
 * `run_all_examples.sh`
-    - Shell script to run all available simulation binaries in `bin/`. 
+    - Shell script to run all available simulation examples from pre-defined configuration.
 * `sample-output/`
     - Directory containing sample output logs from model simulation. These logs correspond to those excerpted in the project report (`docs/Game_Map.pdf`), and are presented here in full.
 * `test/`
@@ -60,16 +61,39 @@ To build this project, issue the following command:
 ```sh
 $ . build_sim.sh
 ```
+Find the resultant binary at `bin/map_generation`.
 
-### Execute
+### Execute Custom Simulation
+Tp see a list of runtime options and defaults for this project's binary, issue the following command:
+```sh
+$ ./bin/map_generation [-h | --help]
+```
+For example, an invocation with all three parameters receiving arguments may look as follows:
+```sh
+$ ./bin/map_generation \
+  --config config/mapgen_config.json \    # specify input configuration file (JSON)
+  --output output/mapgen_grid_log.csv \   # specify output log file (CSV)
+  --duration 15                           # specify simulation duration (time units)
+```
+
+### Execute Examples
 To execute this project's example simulations, issue the following command:
 ```sh
 $ ./run_all_examples.sh
 ```
 Upon successful execution, corresponding output for each simulation binary will be found in the `output/` directory.
 
+### Visualizing the Results
+Carleton's DEVSsim [Cell-DEVS Viewer](https://devssim.carleton.ca/cell-devs-viewer://devssim.carleton.ca/cell-devs-viewer/) may be used to visualize the simulations executed by this project's binary. To ensure your files are recognized by the visualizer, constrain your file names as follows:
+1. The JSON simulation configuration file:
+    * `<name>_config.json`
+2. The JSON simulation visualization configuration file:
+    * `<name>Visualization_config.json`
+3. The CSV output grid log file:
+    * `<name>_grid_log.csv`
 
 ## Notes
 * With permission and by instruction, this project uses the [blank project template](https://github.com/Sasisekhar/blank_project_rt) provided in the Cadmium V2 manual.
 * With permission and by instruction, this project is informed by the [sample project](https://github.com/Sasisekhar/cell-devs-manual-example) provided in the Cadmium V2 manual.
+* With permission, this project is informed by and reuses parts of the author's original work for the [LEO User Link](https://github.com/mpdesantis/LEO_User_Link).
 * Thanks Professor Wainer!! 
