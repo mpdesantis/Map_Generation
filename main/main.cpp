@@ -36,13 +36,13 @@ void printHelp() {
 
 // Model
 std::shared_ptr<GridCell<MapgenState, double>> addGridCell(const coordinates & cellId, const std::shared_ptr<const GridCellConfig<MapgenState, double>>& cellConfig) {
-	auto cellModel = cellConfig->cellModel;
+    auto cellModel = cellConfig->cellModel;
 
-	if (cellModel == "mapgen") {
-		return std::make_shared<mapgen>(cellId, cellConfig);
-	} else {
-		throw std::bad_typeid();
-	}
+    if (cellModel == "mapgen") {
+        return std::make_shared<mapgen>(cellId, cellConfig);
+    } else {
+        throw std::bad_typeid();
+    }
 }
 
 // Simulation
@@ -54,9 +54,9 @@ int main(int argc, char ** argv) {
     const std::string DEFAULT_OUTPUT_FILE_PATH = "output/mapgen_grid_log.csv";
 
     /* Defaults */
-	std::string configFilePath = DEFAULT_CONFIG_FILE_PATH;
-	double simTime = DEFAULT_SIM_TIME;
-	std::string outputFilePath = DEFAULT_OUTPUT_FILE_PATH;
+    std::string configFilePath = DEFAULT_CONFIG_FILE_PATH;
+    double simTime = DEFAULT_SIM_TIME;
+    std::string outputFilePath = DEFAULT_OUTPUT_FILE_PATH;
 
     /* Argument Parsing */
     for (int i = 1; i < argc; ++i) {
@@ -113,19 +113,19 @@ int main(int argc, char ** argv) {
     std::cout << std::endl;
 
     /* Models */
-	auto model = std::make_shared<GridCellDEVSCoupled<MapgenState, double>>("mapgen", addGridCell, configFilePath);
-	model->buildModel();
-	
+    auto model = std::make_shared<GridCellDEVSCoupled<MapgenState, double>>("mapgen", addGridCell, configFilePath);
+    model->buildModel();
+    
     /* Logs */
-	auto rootCoordinator = RootCoordinator(model);
-	rootCoordinator.setLogger<CSVLogger>(outputFilePath, ";");
-	
+    auto rootCoordinator = RootCoordinator(model);
+    rootCoordinator.setLogger<CSVLogger>(outputFilePath, ";");
+    
     /* Simulation */
 
     // Run simulation
-	rootCoordinator.start();
-	rootCoordinator.simulate(simTime);
-	rootCoordinator.stop();
+    rootCoordinator.start();
+    rootCoordinator.simulate(simTime);
+    rootCoordinator.stop();
 
     // Report results and return
     std::cout << "\nSimulation complete.\n";

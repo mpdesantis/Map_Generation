@@ -11,7 +11,7 @@ enum MapgenStateName {
     WATER,  // 0
     LAND,   // 1
     FOREST, // 2
-    SAND  // 3
+    SAND    // 3
 };
 
 
@@ -35,7 +35,7 @@ struct MapgenState {
     /**
      * Constructor
      */
-	MapgenState() : terrain(MapgenStateName::WATER)
+    MapgenState() : terrain(MapgenStateName::WATER)
         , land_birth_limit(6)
         , land_death_limit(4)
         , forest_death_limit(3)
@@ -68,7 +68,7 @@ std::ostream& operator<<(std::ostream& os, const MapgenState& s) {
  * Enables simulator to check for equality between two state objects.
  */
 bool operator!=(const MapgenState& x, const MapgenState& y) {
-	return x.terrain != y.terrain;
+    return x.terrain != y.terrain;
 }
 
 /**
@@ -76,15 +76,15 @@ bool operator!=(const MapgenState& x, const MapgenState& y) {
  */
 void from_json(const nlohmann::json& j, MapgenState& s) {
     // terrain
-	j.at("terrain").get_to(s.terrain);
-	j.at("land_birth_limit").get_to(s.land_birth_limit);
-	j.at("land_death_limit").get_to(s.land_death_limit);
-	j.at("forest_death_limit").get_to(s.forest_death_limit);
-	j.at("sand_death_limit").get_to(s.sand_death_limit);
-	j.at("forest_base_rate").get_to(s.forest_base_rate);
-	j.at("forest_multiplier").get_to(s.forest_multiplier);
-	j.at("sand_base_rate").get_to(s.sand_base_rate);
-	j.at("sand_multiplier").get_to(s.sand_multiplier);
+    j.at("terrain").get_to(s.terrain);
+    j.at("land_birth_limit").get_to(s.land_birth_limit);
+    j.at("land_death_limit").get_to(s.land_death_limit);
+    j.at("forest_death_limit").get_to(s.forest_death_limit);
+    j.at("sand_death_limit").get_to(s.sand_death_limit);
+    j.at("forest_base_rate").get_to(s.forest_base_rate);
+    j.at("forest_multiplier").get_to(s.forest_multiplier);
+    j.at("sand_base_rate").get_to(s.sand_base_rate);
+    j.at("sand_multiplier").get_to(s.sand_multiplier);
 }
 
 #endif // MAPGEN_STATE_HPP
