@@ -1,7 +1,7 @@
 # README
 * Author: Michael De Santis
 * CUID: 101213450
-* Date: 2025/03/16
+* Date: 2025/03/23
 
 ## Description
 Cell Discrete Event System Specification (Cell-DEVS) Model and Simulation for the Procedural Content Generation (PCG) of a game map. For additional information, please see the `doc/` directory.
@@ -25,16 +25,16 @@ This repository's contents.
         2. Model Source Article: `wu-map-gen-from-ca.pdf`
 * `env.sh`
     - Shell script defining additional environment variables for this repository.
+* `example-output/`
+    - Directory containing sample output logs from model simulation, accompanied by the corresponding visualization files (images and videos).
 * `img/`
-    - Directory containing images for this repository (graphs/diagrams), as included inline in the project report.
+    - Directory containing images for this repository, as included inline in the project report.
 * `main/`
-    - C++ source and header files for this repository's main code module, `game_map`.
+    - C++ source and header files for this repository's main code module, `map_generation`.
 * `output/`
     - Generated directory containing output logs from model simulation.
 * `run_all_examples.sh`
     - Shell script to run all available simulation examples from pre-defined configuration.
-* `sample-output/`
-    - Directory containing sample output logs from model simulation. These logs correspond to those excerpted in the project report (`docs/Game_Map.pdf`), and are presented here in full.
 * `test/`
     - C++ header files for this repository's tests.
     
