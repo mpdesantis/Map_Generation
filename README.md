@@ -63,7 +63,7 @@ $ . build_sim.sh
 ```
 Find the resultant binary at `bin/map_generation`.
 
-### Configuring an Experiment for Simulation
+### Configure an Experiment for Simulation
 To configure a sample experiment for simulation, you may copy and modify the template configuration files provided in `config/templates/`. For examples, see `config/ex01`, `config/ex02`, and `config/ex03`.
 
 ### Execute Custom Simulation
@@ -85,6 +85,7 @@ To execute this project's example simulations, issue the following command:
 $ ./run_all_examples.sh
 ```
 Upon successful execution, corresponding output for each simulation binary will be found in the `output/` directory.
+Results from a single execution, with corresponding visuals (images and video) may be found in the `example-output/` directory.
 
 ### Visualizing the Results
 Carleton's DEVSsim [Cell-DEVS Viewer](https://devssim.carleton.ca/cell-devs-viewer://devssim.carleton.ca/cell-devs-viewer/) may be used to visualize the simulations executed by this project's binary. To ensure your files are recognized by the visualizer, constrain your file names as follows:
