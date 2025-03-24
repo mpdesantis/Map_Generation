@@ -35,8 +35,6 @@ This repository's contents.
     - Generated directory containing output logs from model simulation.
 * `run_all_examples.sh`
     - Shell script to run all available simulation examples from pre-defined configuration.
-* `test/`
-    - C++ header files for this repository's tests.
     
 ## Usage
 Usage instructions for this project and repository.
@@ -44,12 +42,12 @@ Usage instructions for this project and repository.
 ### Installing and Configuring Cadmium V2
 In order to compile this repository's source code, your system must have [Cadmium V2](https://github.com/Sasisekhar/cadmium_v2) available on your system, and accessible via the environment variable `$CADMIUM`. This library, and its own dependencies, are included within this repository as a `git` submodule. To ensure that your system's submodules are up-to-date prior to compilation, issue the following command:
 ```sh
-git submodule update --init --recursive
+$ git submodule update --init --recursive
 ```
 Once the `cadmium_v2` sudmodule directory is available on your file system, enter that directory and follow the instructions provided therein for installation and configuration.  Once complete, you should be able to verify that your configuration is correct with the output of the following command:
 ```sh
 $ echo $CADMIUM
-<path-to>/Game_Map/cadmium_v2/include
+<path-to>/Map_Generation/cadmium_v2/include
 ```
 If the above environment variable is discrepant on your system, you can overwrite it by sourcing `env.sh` in this directory with the following command:
 ```sh
@@ -64,7 +62,7 @@ $ . build_sim.sh
 Find the resultant binary at `bin/map_generation`.
 
 ### Configure an Experiment for Simulation
-To configure a sample experiment for simulation, you may copy and modify the template configuration files provided in `config/templates/`. For examples, see `config/ex01`, `config/ex02`, and `config/ex03`.
+To configure a sample experiment for simulation, you may copy and modify the template configuration files provided in `config/templates/`. For examples, see `config/ex01/`, `config/ex02/`, and `config/ex03/`.
 
 ### Execute Custom Simulation
 Tp see a list of runtime options and defaults for this project's binary, issue the following command:
@@ -85,7 +83,7 @@ To execute this project's example simulations, issue the following command:
 $ ./run_all_examples.sh
 ```
 Upon successful execution, corresponding output for each simulation binary will be found in the `output/` directory.
-Results from a single execution, with corresponding visuals (images and video) may be found in the `example-output/` directory.
+Results from a single execution, with corresponding visuals (images and video) may be found in the `example-output/` directory. These examples are referenced in the project report.
 
 ### Visualizing the Results
 Carleton's DEVSsim [Cell-DEVS Viewer](https://devssim.carleton.ca/cell-devs-viewer://devssim.carleton.ca/cell-devs-viewer/) may be used to visualize the simulations executed by this project's binary. To ensure your files are recognized by the visualizer, constrain your file names as follows:
