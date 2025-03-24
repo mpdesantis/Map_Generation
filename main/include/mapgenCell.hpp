@@ -135,13 +135,13 @@ class mapgen : public GridCell<MapgenState, double> {
             else {
                 // Get random number in [0, 1] to test against FOREST rules
                 double r = randomProbability();
-                // Get base threshold for becoming SAND
+                // Get base threshold for becoming FOREST
                 double forest_threshold = state.forest_base_rate;
                 // FOREST is more likely to form near FOREST.
                 // Apply multiplier to increase chance of becoming FOREST
                 // based on number of FOREST neighbors.
                 forest_threshold += state.forest_multiplier * forest_neighbors;
-                // Case: This cell is below threshold, so it becomes SAND
+                // Case: This cell is below threshold, so it becomes FOREST
                 if (r <= forest_threshold) {
                     // A FOREST cell is born
                     state.terrain = MapgenStateName::FOREST;
